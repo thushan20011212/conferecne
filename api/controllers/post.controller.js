@@ -1,6 +1,6 @@
 import Post from '../models/post.model.js';
 import User from '../models/user.model.js';
-import { errorHandler } from '../Utils/error.js';
+import { errorHandler } from '../utils/error.js';
 
 export const create = async (req, res, next) => {
   if (!req.body.title || !req.body.content || !req.body.date || !req.body.time || !req.body.keySpeakers || !req.body.venue) {
