@@ -1,9 +1,26 @@
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { FaThumbsUp } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Button, Textarea } from 'flowbite-react';
-import { set } from 'mongoose';
+// Removed incorrect frontend import of mongoose
+
+// Lightweight timeAgo formatter to avoid pulling moment into the client bundle
+function timeAgo(dateStr) {
+  const date = new Date(dateStr);
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  const intervals = [
+    { label: 'year', secs: 31536000 },
+    { label: 'month', secs: 2592000 },
+    { label: 'day', secs: 86400 },
+    { label: 'hour', secs: 3600 },
+    { label: 'minute', secs: 60 },
+  ];
+  for (const { label, secs } of intervals) {
+    const count = Math.floor(seconds / secs);
+    if (count >= 1) return `${count} ${label}${count > 1 ? 's' : ''} ago`;
+  }
+  return 'just now';
+}
 
 export default function Comment({ comment, onLike, onEdit, onDelete }) {
   const [user, setUser] = useState({});
@@ -64,7 +81,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
             {user ? `@${user.username}` : 'anonymous user'}
           </span>
           <span className='text-gray-500 text-xs'>
-            {moment(comment.createdAt).fromNow()}
+            {timeAgo(comment.createdAt)}
           </span>
         </div>
         {isEditing ? (
